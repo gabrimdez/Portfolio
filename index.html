@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portafolio | Gabriel Acevedo</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="profile">
+        <img src="FotoPerfil.jpg" alt="Foto de Gabriel" />
+        <div class="name">Gabriel Acevedo</div>
+        <div class="role">Desarrollador de Aplicaciones Multiplataforma</div>
+      </div>
+
+      <div class="links">
+        <a href="mailto:acemengab@gmail.com" class="link-btn" target="_blank"
+          ><i class="fa-solid fa-envelope"></i>Email</a
+        >
+        <a href="https://github.com/gabrimdez" class="link-btn" target="_blank"
+          ><i class="fa-brands fa-github"></i>GitHub</a
+        >
+        <a
+          href="https://www.linkedin.com/in/gabriel-acevedo-m%C3%A9ndez-0582a4382/"
+          class="link-btn" target="_blank"
+        >
+          <i class="fa-brands fa-linkedin"></i>LinkedIn
+        </a>
+
+        <a href="cv.pdf" class="link-btn" target="_blank"><i class="fa-solid fa-file"></i>CV</a>
+      </div>
+
+      <section>
+        <h2>Sobre mí</h2>
+        <p>
+          Soy estudiante de 2º de DAM con formación en bachillerato científico.
+          Apasionado por la tecnología, la ciencia y el deporte, con experiencia
+          como entrenador deportivo que reforzó mi responsabilidad, liderazgo y
+          empatía. Me motiva aprender, resolver problemas y crear soluciones
+          eficientes.
+        </p>
+      </section>
+
+      <section>
+        <h2>Lenguajes de programación</h2>
+        <div class="tech-list">
+          <div class="tech-item"><i class="fa-brands fa-java"></i> Java</div>
+          <div class="tech-item">
+            <i class="fa-brands fa-python"></i> Python
+          </div>
+          <div class="tech-item"><i class="fa-brands fa-html5"></i> HTML</div>
+          <div class="tech-item"><i class="fa-brands fa-css3-alt"></i> CSS</div>
+          <div class="tech-item">
+            <i class="fa-brands fa-js"></i> JavaScript
+          </div>
+        </div>
+        <h2>Bases de datos</h2>
+        <div class="tech-list">
+          <div class="tech-item"><i class="fa-solid fa-database"></i> SQL</div>
+          <div class="tech-item"><i class="fa-solid fa-leaf"></i> MongoDB</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Proyectos</h2>
+        <div class="project">
+          <h3 style="text-decoration: underline">Asesorías</h3>
+          <p>
+            Página web desarrollada para la captación y gestión de clientes de
+            asesorías fitness personalizadas. Incluye landing page de
+            presentación, formulario avanzado para recopilar información
+            relevante de los clientes interesados (hábitos, objetivos, contacto
+            y motivaciones) y mensajes personalizados que refuerzan el
+            acompañamiento. Además, cuenta con una sección privada protegida por
+            usuario y contraseña donde el influencer accede de forma segura a
+            los datos sin exponer información confidencial.
+            <br /><br />
+            El proyecto destaca por su enfoque en la privacidad, el diseño
+            centrado en el usuario y la atención al detalle en el proceso de
+            onboarding de clientes potenciales.
+          </p>
+          <img src="asesorias.png" alt="Asesorías" />
+          <a href="https://github.com/gabrimdez/asesorias_anxo" class="link-codeShortly" target="_blank">
+            <i class="fa-brands fa-github"></i>Enlace al código
+        </a>
+        </div>
+        <div class="project">
+          <h3>Shortly</h3>
+          <p>
+            Shortly es una aplicación web que permite acortar enlaces, generar
+            códigos QR y gestionar URLs desde un panel privado protegido por
+            usuario y contraseña. Cada usuario puede crear y consultar su
+            historial de enlaces acortados, facilitando la organización y el
+            acceso rápido a sus contenidos. La app destaca por su enfoque en la
+            privacidad y la gestión individual, con validación de enlaces y
+            sesiones seguras.
+            <br /><br />
+            El diseño sencillo y funcional asegura que cualquier usuario pueda
+            compartir y administrar sus enlaces de forma eficiente, tanto en
+            entornos personales como profesionales.
+          </p>
+          <img src="Shortly.png" alt="Proyecto 2" />
+
+          <a href="https://github.com/gabrimdez/Shortly" class="link-codeShortly" target="_blank">
+            <i class="fa-brands fa-github"></i>Enlace al código
+        </a>
+
+        </div>
+        
+      <section>
+        <h2>Formación</h2>
+        <div class="edu-item"><strong>Ciclo Superior DAM</strong> – 2º año</div>
+        <div class="edu-item">
+          <strong>Bachillerato científico</strong> – IES Val do Tea
+        </div>
+        <div class="edu-item">
+          <strong>Curso de iniciación a Python</strong> – Mouredev
+        </div>
+      </section>
+
+      <div class="footer">© 2025 Gabriel Acevedo - Portafolio personal</div>
+    </div>
+
+    <!-- Lightbox para imágenes ampliadas -->
+    <div id="lightbox" style="display: none">
+      <span id="close-lightbox">&times;</span>
+      <img id="lightbox-img" src="" alt="Imagen ampliada" />
+    </div>
+
+    <script src="scripts.js"></script>
+  </body>
+</html>
