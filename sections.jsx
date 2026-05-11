@@ -189,7 +189,6 @@ function getNutriaCandidates(src) {
 function NutriaGallery({ dict, lang }) {
   const [active, setActive] = useState(null);
   const [sources, setSources] = useState({});
-  const slotRefs = useRef([]);
 
   useEffect(() => {
     let alive = true;
@@ -214,10 +213,6 @@ function NutriaGallery({ dict, lang }) {
 
   const getShotSrc = (index) => {
     const shot = NUTRIA_SCREENSHOTS[index];
-    const slot = slotRefs.current[index];
-    const slotImg = slot && slot.shadowRoot && slot.shadowRoot.querySelector(".frame img");
-    const slotSrc = slotImg && slotImg.getAttribute("src");
-    if (slotSrc && slot.hasAttribute("data-filled")) return slotSrc;
     return sources[shot.src] || "";
   };
 
@@ -260,16 +255,17 @@ function NutriaGallery({ dict, lang }) {
           {NUTRIA_SCREENSHOTS.map((shot, index) => {
             const label = shot.label[lang] || shot.label.es;
             const resolvedSrc = sources[shot.src];
+            const hasImage = Boolean(resolvedSrc);
             return (
               <div
                 key={shot.src}
-                className={`nutria-shot ${shot.compact ? "compact" : ""}`}
-                role="button"
-                tabIndex="0"
-                aria-label={`${lang === "es" ? "Ver captura grande" : "View screenshot"}: ${label}`}
-                onClick={() => openShot(index)}
+                className={`nutria-shot ${shot.compact ? "compact" : ""} ${hasImage ? "" : "is-empty"}`}
+                role={hasImage ? "button" : "img"}
+                tabIndex={hasImage ? "0" : undefined}
+                aria-label={hasImage ? `${lang === "es" ? "Ver captura grande" : "View screenshot"}: ${label}` : label}
+                onClick={hasImage ? () => openShot(index) : undefined}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
+                  if (hasImage && (e.key === "Enter" || e.key === " ")) {
                     e.preventDefault();
                     openShot(index);
                   }
@@ -278,14 +274,9 @@ function NutriaGallery({ dict, lang }) {
                 {resolvedSrc ? (
                   <img src={resolvedSrc} alt={label} />
                 ) : (
-                  <image-slot
-                    ref={(el) => { slotRefs.current[index] = el; }}
-                    id={`nutria-shot-${index + 1}`}
-                    shape="rounded"
-                    radius="18"
-                    fit="contain"
-                    placeholder={`${String(index + 1).padStart(2, "0")} - ${label}`}
-                  ></image-slot>
+                  <div className="nutria-shot-empty">
+                    {lang === "es" ? "Imagen no publicada" : "Image not published"}
+                  </div>
                 )}
                 <span className="nutria-shot-label">
                   <span>{String(index + 1).padStart(2, "0")}</span>
@@ -363,7 +354,6 @@ const APARCAYA_SCREENSHOTS = [
 function AparcayaGallery({ dict, lang }) {
   const [active, setActive] = useState(null);
   const [sources, setSources] = useState({});
-  const slotRefs = useRef([]);
 
   useEffect(() => {
     let alive = true;
@@ -388,10 +378,6 @@ function AparcayaGallery({ dict, lang }) {
 
   const getShotSrc = (index) => {
     const shot = APARCAYA_SCREENSHOTS[index];
-    const slot = slotRefs.current[index];
-    const slotImg = slot && slot.shadowRoot && slot.shadowRoot.querySelector(".frame img");
-    const slotSrc = slotImg && slotImg.getAttribute("src");
-    if (slotSrc && slot.hasAttribute("data-filled")) return slotSrc;
     return sources[shot.src] || "";
   };
 
@@ -434,16 +420,17 @@ function AparcayaGallery({ dict, lang }) {
           {APARCAYA_SCREENSHOTS.map((shot, index) => {
             const label = shot.label[lang] || shot.label.es;
             const resolvedSrc = sources[shot.src];
+            const hasImage = Boolean(resolvedSrc);
             return (
               <div
                 key={shot.src}
-                className="nutria-shot"
-                role="button"
-                tabIndex="0"
-                aria-label={`${lang === "es" ? "Ver captura grande" : "View screenshot"}: ${label}`}
-                onClick={() => openShot(index)}
+                className={`nutria-shot ${hasImage ? "" : "is-empty"}`}
+                role={hasImage ? "button" : "img"}
+                tabIndex={hasImage ? "0" : undefined}
+                aria-label={hasImage ? `${lang === "es" ? "Ver captura grande" : "View screenshot"}: ${label}` : label}
+                onClick={hasImage ? () => openShot(index) : undefined}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
+                  if (hasImage && (e.key === "Enter" || e.key === " ")) {
                     e.preventDefault();
                     openShot(index);
                   }
@@ -452,14 +439,9 @@ function AparcayaGallery({ dict, lang }) {
                 {resolvedSrc ? (
                   <img src={resolvedSrc} alt={label} />
                 ) : (
-                  <image-slot
-                    ref={(el) => { slotRefs.current[index] = el; }}
-                    id={`aparcaya-shot-${index + 1}`}
-                    shape="rounded"
-                    radius="18"
-                    fit="contain"
-                    placeholder={`${String(index + 1).padStart(2, "0")} - ${label}`}
-                  ></image-slot>
+                  <div className="nutria-shot-empty">
+                    {lang === "es" ? "Imagen no publicada" : "Image not published"}
+                  </div>
                 )}
                 <span className="nutria-shot-label">
                   <span>{String(index + 1).padStart(2, "0")}</span>
