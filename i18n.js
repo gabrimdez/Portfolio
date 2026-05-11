@@ -31,7 +31,7 @@ window.I18N = {
       meta: "Trayectoria"
     },
     nutria: {
-      tag: "Producto destacado",
+      tag: "Proyecto full-stack",
       title: "NutrIA",
       tagline: "Nutrición y entrenamiento personalizado con IA.",
       body: [
@@ -43,7 +43,7 @@ window.I18N = {
       tags: ["React Native", "TypeScript", "Python", "IA", "API", "Auth"]
     },
     aparcaya: {
-      tag: "Producto full-stack",
+      tag: "Proyecto full-stack",
       title: "AparcaYa",
       tagline: "Gestión de parking corporativo con asistente inteligente.",
       body: [

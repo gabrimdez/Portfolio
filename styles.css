@@ -9,9 +9,9 @@
   --ink: #f5f5f7;
   --ink-2: rgba(245, 245, 247, 0.72);
   --ink-3: rgba(245, 245, 247, 0.48);
-  --accent: #7c5cff;
-  --accent-2: #ff5c8a;
-  --accent-soft: rgba(124, 92, 255, 0.18);
+  --accent: #2f80ff;
+  --accent-2: #25e08a;
+  --accent-soft: rgba(47, 128, 255, 0.18);
   --display: "Space Grotesk", "Inter", system-ui, sans-serif;
   --body: "Inter", system-ui, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, monospace;
@@ -44,7 +44,7 @@ img { display: block; max-width: 100%; }
   position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background:
     radial-gradient(1200px 700px at 80% -10%, var(--accent-soft), transparent 60%),
-    radial-gradient(900px 600px at -10% 110%, rgba(255, 92, 138, 0.12), transparent 55%),
+    radial-gradient(900px 600px at -10% 110%, rgba(37, 224, 138, 0.12), transparent 55%),
     var(--bg);
 }
 .bg-grid {
@@ -211,8 +211,12 @@ img { display: block; max-width: 100%; }
   margin: 0;
   text-wrap: balance;
 }
+.hero-title .word-reveal {
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
 .hero-title .accent-text {
-  background: linear-gradient(120deg, var(--accent), var(--accent-2) 60%, #ffd58a);
+  background: linear-gradient(120deg, #2f80ff, #25e08a);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
   font-style: italic; font-weight: 500;
@@ -293,7 +297,7 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--line);
   padding: 20px 0;
   overflow: hidden;
-  background: linear-gradient(180deg, transparent, rgba(124,92,255,0.04), transparent);
+  background: linear-gradient(180deg, transparent, rgba(47,128,255,0.05), transparent);
 }
 .marquee-track {
   display: flex; gap: 56px; align-items: center;
@@ -310,7 +314,8 @@ img { display: block; max-width: 100%; }
 }
 .marquee-item .dot {
   width: 10px; height: 10px; border-radius: 50%;
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 18px rgba(47,128,255,0.45), 0 0 28px rgba(37,224,138,0.22);
 }
 .marquee-item.alt {
   -webkit-text-stroke: 1px var(--ink);
@@ -442,7 +447,7 @@ img { display: block; max-width: 100%; }
 }
 .nutria-shot.compact {
   background:
-    radial-gradient(120% 100% at 50% 0%, rgba(124,92,255,0.15), transparent 52%),
+    radial-gradient(120% 100% at 50% 0%, rgba(47,128,255,0.14), transparent 52%),
     rgba(255,255,255,0.035);
 }
 .nutria-shot:hover,

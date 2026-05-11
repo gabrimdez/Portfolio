@@ -4,8 +4,8 @@ const { useEffect, useState, useMemo } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "vibe": "linear",
-  "accent": "#7c5cff",
-  "accent2": "#ff5c8a",
+  "accent": "#2f80ff",
+  "accent2": "#25e08a",
   "showGrid": true,
   "showNoise": true,
   "showMarquee": true,
@@ -128,13 +128,13 @@ function App() {
         <TweakColor
           label="Acento principal"
           value={t.accent}
-          options={["#7c5cff", "#00ff9d", "#ff5c2a", "#3a8dff", "#ffd400", "#ff5c8a"]}
+          options={["#2f80ff", "#25e08a", "#00c2ff", "#1d5fd1", "#18b978", "#ffd400"]}
           onChange={(v) => setTweak("accent", v)}
         />
         <TweakColor
           label="Acento secundario"
           value={t.accent2}
-          options={["#ff5c8a", "#7c5cff", "#ffd400", "#00ff9d", "#3a8dff", "#ff5c2a"]}
+          options={["#25e08a", "#2f80ff", "#00c2ff", "#8eea6a", "#20c997", "#ffd400"]}
           onChange={(v) => setTweak("accent2", v)}
         />
 
