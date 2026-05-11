@@ -6,7 +6,6 @@ function Nav({ t, lang, setLang, dict }) {
   return (
     <nav className="nav">
       <a href="#top" className="nav-mark">
-        <span className="glyph">G</span>
         <span>Gabriel Acevedo</span>
       </a>
       <div className="nav-links">
@@ -171,15 +170,170 @@ function ProjectMedia({ slotId, placeholder, badge, mark, children }) {
   );
 }
 
+const NUTRIA_SCREENSHOTS = [
+  { src: "assets/nutria-01.png", label: { es: "Inicio - nutrición", en: "Home - nutrition" } },
+  { src: "assets/nutria-02.png", label: { es: "Inicio - entrenamiento", en: "Home - training" } },
+  { src: "assets/nutria-03.png", label: { es: "Entrenamiento", en: "Training" } },
+  { src: "assets/nutria-04.png", label: { es: "Widget", en: "Widget" }, compact: true },
+  { src: "assets/nutria-05.png", label: { es: "Planes", en: "Plans" } },
+  { src: "assets/nutria-06.png", label: { es: "Perfil", en: "Profile" } },
+  { src: "assets/nutria-07.png", label: { es: "NutriCoach", en: "NutriCoach" } },
+  { src: "assets/nutria-08.png", label: { es: "Escáner", en: "Scanner" } }
+];
+const NUTRIA_IMAGE_EXTENSIONS = ["png", "jpg", "jpeg", "webp"];
+
+function getNutriaCandidates(src) {
+  return NUTRIA_IMAGE_EXTENSIONS.map((ext) => src.replace(/\.[^.]+$/, `.${ext}`));
+}
+
+function NutriaGallery({ dict, lang }) {
+  const [active, setActive] = useState(null);
+  const [sources, setSources] = useState({});
+  const slotRefs = useRef([]);
+
+  useEffect(() => {
+    let alive = true;
+    NUTRIA_SCREENSHOTS.forEach((shot) => {
+      const candidates = getNutriaCandidates(shot.src);
+      const tryCandidate = (candidateIndex) => {
+        if (!alive) return;
+        const candidate = candidates[candidateIndex];
+        if (!candidate) {
+          if (alive) setSources((prev) => ({ ...prev, [shot.src]: "" }));
+          return;
+        }
+        const img = new Image();
+        img.onload = () => alive && setSources((prev) => ({ ...prev, [shot.src]: candidate }));
+        img.onerror = () => alive && tryCandidate(candidateIndex + 1);
+        img.src = candidate;
+      };
+      tryCandidate(0);
+    });
+    return () => { alive = false; };
+  }, []);
+
+  const getShotSrc = (index) => {
+    const shot = NUTRIA_SCREENSHOTS[index];
+    const slot = slotRefs.current[index];
+    const slotImg = slot && slot.shadowRoot && slot.shadowRoot.querySelector(".frame img");
+    const slotSrc = slotImg && slotImg.getAttribute("src");
+    if (slotSrc && slot.hasAttribute("data-filled")) return slotSrc;
+    return sources[shot.src] || "";
+  };
+
+  const closeLightbox = () => setActive(null);
+  const openShot = (index) => {
+    if (!getShotSrc(index)) return;
+    setActive(index);
+  };
+  const goTo = (delta) => {
+    setActive((current) => {
+      const next = (current + delta + NUTRIA_SCREENSHOTS.length) % NUTRIA_SCREENSHOTS.length;
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    if (active === null) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") goTo(-1);
+      if (e.key === "ArrowRight") goTo(1);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [active]);
+
+  const activeShot = active === null ? null : NUTRIA_SCREENSHOTS[active];
+  const activeSrc = active === null ? "" : getShotSrc(active);
+
+  return (
+    <>
+      <div className="project-media nutria-gallery reveal">
+        <span className="badge">{dict.nutria.tag}</span>
+        <div className="nutria-shots">
+          {NUTRIA_SCREENSHOTS.map((shot, index) => {
+            const label = shot.label[lang] || shot.label.es;
+            const resolvedSrc = sources[shot.src];
+            return (
+              <div
+                key={shot.src}
+                className={`nutria-shot ${shot.compact ? "compact" : ""}`}
+                role="button"
+                tabIndex="0"
+                aria-label={`${lang === "es" ? "Ver captura grande" : "View screenshot"}: ${label}`}
+                onClick={() => openShot(index)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openShot(index);
+                  }
+                }}
+              >
+                {resolvedSrc ? (
+                  <img src={resolvedSrc} alt={label} />
+                ) : (
+                  <image-slot
+                    ref={(el) => { slotRefs.current[index] = el; }}
+                    id={`nutria-shot-${index + 1}`}
+                    shape="rounded"
+                    radius="18"
+                    fit="contain"
+                    placeholder={`${String(index + 1).padStart(2, "0")} - ${label}`}
+                  ></image-slot>
+                )}
+                <span className="nutria-shot-label">
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  {label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        <span className="corner-mark">01 / NUTRIA</span>
+      </div>
+
+      {activeShot && ReactDOM.createPortal(
+        <div className="nutria-lightbox" role="dialog" aria-modal="true" aria-label={activeShot.label[lang] || activeShot.label.es}>
+          <button className="nutria-lightbox-backdrop" type="button" aria-label={lang === "es" ? "Cerrar visor" : "Close viewer"} onClick={closeLightbox}></button>
+          <div className="nutria-lightbox-shell">
+            <div className="nutria-lightbox-top">
+              <div>
+                <span>{String(active + 1).padStart(2, "0")} / {String(NUTRIA_SCREENSHOTS.length).padStart(2, "0")}</span>
+                <strong>{activeShot.label[lang] || activeShot.label.es}</strong>
+              </div>
+              <button className="nutria-lightbox-close" type="button" onClick={closeLightbox} aria-label={lang === "es" ? "Cerrar" : "Close"}>&times;</button>
+            </div>
+            <button className="nutria-lightbox-nav prev" type="button" onClick={() => goTo(-1)} aria-label={lang === "es" ? "Captura anterior" : "Previous screenshot"}>&lsaquo;</button>
+            <div className="nutria-lightbox-media">
+              {activeSrc ? (
+                <img src={activeSrc} alt={activeShot.label[lang] || activeShot.label.es} />
+              ) : (
+                <div className="nutria-lightbox-empty">
+                  {lang === "es"
+                    ? `Añade la imagen en ${activeShot.src} para verla aquí.`
+                    : `Add the image at ${activeShot.src} to view it here.`}
+                </div>
+              )}
+            </div>
+            <button className="nutria-lightbox-nav next" type="button" onClick={() => goTo(1)} aria-label={lang === "es" ? "Captura siguiente" : "Next screenshot"}>&rsaquo;</button>
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
+  );
+}
+
 function NutriaProject({ dict, lang }) {
   return (
     <article className="project" data-screen-label="NutrIA">
-      <ProjectMedia
-        slotId="nutria-shot"
-        placeholder={lang === "es" ? "Capturas próximamente" : "Screenshots coming soon"}
-        badge={dict.nutria.tag}
-        mark="01 / NUTRIA"
-      />
+      <NutriaGallery dict={dict} lang={lang} />
       <div className="project-info">
         <div className="project-eyebrow reveal">{dict.nutria.tag}</div>
         <h3 className="project-title">
@@ -199,36 +353,174 @@ function NutriaProject({ dict, lang }) {
   );
 }
 
-function AsesoriasProject({ dict, lang }) {
+const APARCAYA_SCREENSHOTS = [
+  { src: "assets/aparcaya-01.png", label: { es: "Mapa del parking", en: "Parking map" } },
+  { src: "assets/aparcaya-02.png", label: { es: "Plano de planta", en: "Floor plan" } },
+  { src: "assets/aparcaya-03.png", label: { es: "Vehículos", en: "Vehicles" } },
+  { src: "assets/aparcaya-04.png", label: { es: "Asistente", en: "Assistant" } }
+];
+
+function AparcayaGallery({ dict, lang }) {
+  const [active, setActive] = useState(null);
+  const [sources, setSources] = useState({});
+  const slotRefs = useRef([]);
+
+  useEffect(() => {
+    let alive = true;
+    APARCAYA_SCREENSHOTS.forEach((shot) => {
+      const candidates = getNutriaCandidates(shot.src);
+      const tryCandidate = (candidateIndex) => {
+        if (!alive) return;
+        const candidate = candidates[candidateIndex];
+        if (!candidate) {
+          if (alive) setSources((prev) => ({ ...prev, [shot.src]: "" }));
+          return;
+        }
+        const img = new Image();
+        img.onload = () => alive && setSources((prev) => ({ ...prev, [shot.src]: candidate }));
+        img.onerror = () => alive && tryCandidate(candidateIndex + 1);
+        img.src = candidate;
+      };
+      tryCandidate(0);
+    });
+    return () => { alive = false; };
+  }, []);
+
+  const getShotSrc = (index) => {
+    const shot = APARCAYA_SCREENSHOTS[index];
+    const slot = slotRefs.current[index];
+    const slotImg = slot && slot.shadowRoot && slot.shadowRoot.querySelector(".frame img");
+    const slotSrc = slotImg && slotImg.getAttribute("src");
+    if (slotSrc && slot.hasAttribute("data-filled")) return slotSrc;
+    return sources[shot.src] || "";
+  };
+
+  const closeLightbox = () => setActive(null);
+  const openShot = (index) => {
+    if (!getShotSrc(index)) return;
+    setActive(index);
+  };
+  const goTo = (delta) => {
+    setActive((current) => {
+      const next = (current + delta + APARCAYA_SCREENSHOTS.length) % APARCAYA_SCREENSHOTS.length;
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    if (active === null) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") goTo(-1);
+      if (e.key === "ArrowRight") goTo(1);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [active]);
+
+  const activeShot = active === null ? null : APARCAYA_SCREENSHOTS[active];
+  const activeSrc = active === null ? "" : getShotSrc(active);
+
   return (
-    <article className="project flip" data-screen-label="Asesorias">
-      <ProjectMedia
-        slotId="asesorias-shot"
-        placeholder={lang === "es" ? "Capturas próximamente" : "Screenshots coming soon"}
-        badge={dict.asesorias.tag}
-        mark="02 / ASESORIAS"
-      />
+    <>
+      <div className="project-media nutria-gallery aparcaya-gallery reveal">
+        <span className="badge">{dict.aparcaya.tag}</span>
+        <div className="nutria-shots">
+          {APARCAYA_SCREENSHOTS.map((shot, index) => {
+            const label = shot.label[lang] || shot.label.es;
+            const resolvedSrc = sources[shot.src];
+            return (
+              <div
+                key={shot.src}
+                className="nutria-shot"
+                role="button"
+                tabIndex="0"
+                aria-label={`${lang === "es" ? "Ver captura grande" : "View screenshot"}: ${label}`}
+                onClick={() => openShot(index)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openShot(index);
+                  }
+                }}
+              >
+                {resolvedSrc ? (
+                  <img src={resolvedSrc} alt={label} />
+                ) : (
+                  <image-slot
+                    ref={(el) => { slotRefs.current[index] = el; }}
+                    id={`aparcaya-shot-${index + 1}`}
+                    shape="rounded"
+                    radius="18"
+                    fit="contain"
+                    placeholder={`${String(index + 1).padStart(2, "0")} - ${label}`}
+                  ></image-slot>
+                )}
+                <span className="nutria-shot-label">
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  {label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        <span className="corner-mark">02 / APARCAYA</span>
+      </div>
+
+      {activeShot && ReactDOM.createPortal(
+        <div className="nutria-lightbox" role="dialog" aria-modal="true" aria-label={activeShot.label[lang] || activeShot.label.es}>
+          <button className="nutria-lightbox-backdrop" type="button" aria-label={lang === "es" ? "Cerrar visor" : "Close viewer"} onClick={closeLightbox}></button>
+          <div className="nutria-lightbox-shell">
+            <div className="nutria-lightbox-top">
+              <div>
+                <span>{String(active + 1).padStart(2, "0")} / {String(APARCAYA_SCREENSHOTS.length).padStart(2, "0")}</span>
+                <strong>{activeShot.label[lang] || activeShot.label.es}</strong>
+              </div>
+              <button className="nutria-lightbox-close" type="button" onClick={closeLightbox} aria-label={lang === "es" ? "Cerrar" : "Close"}>&times;</button>
+            </div>
+            <button className="nutria-lightbox-nav prev" type="button" onClick={() => goTo(-1)} aria-label={lang === "es" ? "Captura anterior" : "Previous screenshot"}>&lsaquo;</button>
+            <div className="nutria-lightbox-media">
+              {activeSrc ? (
+                <img src={activeSrc} alt={activeShot.label[lang] || activeShot.label.es} />
+              ) : (
+                <div className="nutria-lightbox-empty">
+                  {lang === "es"
+                    ? `Añade la imagen en ${activeShot.src} para verla aquí.`
+                    : `Add the image at ${activeShot.src} to view it here.`}
+                </div>
+              )}
+            </div>
+            <button className="nutria-lightbox-nav next" type="button" onClick={() => goTo(1)} aria-label={lang === "es" ? "Captura siguiente" : "Next screenshot"}>&rsaquo;</button>
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
+  );
+}
+
+function AparcayaProject({ dict, lang }) {
+  return (
+    <article className="project flip" data-screen-label="AparcaYa">
+      <AparcayaGallery dict={dict} lang={lang} />
       <div className="project-info">
-        <div className="project-eyebrow reveal">{dict.asesorias.tag}</div>
+        <div className="project-eyebrow reveal">{dict.aparcaya.tag}</div>
         <h3 className="project-title">
-          <WordReveal text={dict.asesorias.title} delayStep={50} />
+          <WordReveal text={dict.aparcaya.title} delayStep={50} />
         </h3>
-        <p className="project-tagline reveal" style={{ "--delay": "100ms" }}>{dict.asesorias.tagline}</p>
+        <p className="project-tagline reveal" style={{ "--delay": "100ms" }}>{dict.aparcaya.tagline}</p>
         <div className="project-body">
-          {dict.asesorias.body.map((p, i) => (
+          {dict.aparcaya.body.map((p, i) => (
             <p key={i} className="reveal" style={{ "--delay": `${150 + i * 80}ms` }}>{richText(p)}</p>
           ))}
         </div>
         <div className="project-tags reveal" style={{ "--delay": "400ms" }}>
-          {dict.asesorias.tags.map((tg) => <span key={tg} className="project-tag">{tg}</span>)}
-        </div>
-        <div className="project-actions reveal" style={{ "--delay": "500ms" }}>
-          <a className="btn" href="https://github.com/gabrimdez/Asesorias-SKFIT" target="_blank" rel="noreferrer">
-            <Icon.code /> {dict.code}
-          </a>
-          <a className="btn primary" href="https://asesorias-skfit.free.nf/?i=1" target="_blank" rel="noreferrer">
-            {dict.web} <Icon.arrow className="arrow" />
-          </a>
+          {dict.aparcaya.tags.map((tg) => <span key={tg} className="project-tag">{tg}</span>)}
         </div>
       </div>
     </article>
@@ -250,7 +542,7 @@ function Projects({ dict, lang }) {
       </header>
       <div className="projects">
         <NutriaProject dict={dict} lang={lang} />
-        <AsesoriasProject dict={dict} lang={lang} />
+        <AparcayaProject dict={dict} lang={lang} />
       </div>
     </section>
   );

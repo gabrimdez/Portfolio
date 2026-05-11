@@ -42,15 +42,17 @@ window.I18N = {
       ],
       tags: ["React Native", "TypeScript", "Python", "IA", "API", "Auth"]
     },
-    asesorias: {
-      tag: "Cliente real",
-      title: "Asesorías",
-      tagline: "Captación y gestión de clientes para asesorías fitness.",
+    aparcaya: {
+      tag: "Producto full-stack",
+      title: "AparcaYa",
+      tagline: "Gestión de parking corporativo con asistente inteligente.",
       body: [
-        "**Página web** desarrollada para la captación y gestión de clientes de asesorías fitness personalizadas. Incluye landing page de presentación, formulario avanzado para recopilar información relevante de los clientes interesados (hábitos, objetivos, contacto y motivaciones) y mensajes personalizados que refuerzan el acompañamiento.",
-        "Cuenta con una **sección privada protegida** por usuario y contraseña donde el influencer accede de forma segura a los datos sin exponer información confidencial. El proyecto destaca por su enfoque en la privacidad, el diseño centrado en el usuario y la atención al detalle en el proceso de onboarding."
+        "**Plataforma digital** para la gestión de parkings en entornos corporativos. El sistema organiza empresas, parkings, plantas, zonas y plazas, y permite a los empleados reservar, hacer check-in y consultar su plaza en tiempo real desde el móvil. Combina un panel web completo para administradores con una app mobile orientada al uso diario: mapa del parking, reservas, vehículos y asistente conversacional con soporte de voz.",
+        "**Backend con API REST segura**, soporte multiempresa, control de ocupación por eventos y asistente con intents de parking e integración opcional con Gemini. El flujo valida disponibilidad, gestiona sesiones fuera de horario y mantiene el historial de ocupación con coherencia en tiempo real mediante WebSockets.",
+        "**Arquitectura de producto completa**: autenticación JWT, roles diferenciados (superadmin, admin, empleado), control de CORS por origen, rate limiting configurable por endpoint y documentación Swagger generada automáticamente. Tres clientes independientes (API, web, móvil) coordinados sobre la misma base de datos PostgreSQL con migraciones versionadas via Prisma.",
+        "**Diferencial**: tres superficies de uso (web admin + app empleado + API) que comparten lógica de negocio sin duplicarla. El asistente propone, las reglas de ocupación validan, el empleado actúa con una sola app. Siguiente paso: historial persistente del asistente, ranking espacial de plazas y pipeline CI/CD para despliegue continuo."
       ],
-      tags: ["JavaScript", "HTML", "CSS", "Auth", "Forms"]
+      tags: ["React Native", "React", "Node.js", "PostgreSQL", "Prisma", "WebSockets", "JWT", "Gemini"]
     },
     edu: [
       { title: "Ciclo Superior DAM", where: "Desarrollo de Aplicaciones Multiplataforma", tag: "2024 - 2026 · Finalizado" },
@@ -103,15 +105,17 @@ window.I18N = {
       ],
       tags: ["React Native", "TypeScript", "Python", "AI", "API", "Auth"]
     },
-    asesorias: {
-      tag: "Real client",
-      title: "Asesorías",
-      tagline: "Lead capture and client management for fitness coaching.",
+    aparcaya: {
+      tag: "Full-stack product",
+      title: "AparcaYa",
+      tagline: "Corporate parking management with an intelligent assistant.",
       body: [
-        "**Web platform** built to capture and manage clients for personalized fitness coaching. Includes a landing page, an advanced form to collect relevant info from prospects (habits, goals, contact, motivations) and personalized messaging that reinforces the experience.",
-        "Includes a **protected private area** where the coach accesses client data securely without ever exposing confidential information. The project stands out for privacy-first thinking, user-centered design and the level of detail in the onboarding flow."
+        "**Digital platform** for managing parking in corporate environments. The system organizes companies, parking lots, floors, zones and spaces, and lets employees reserve, check in and view their assigned space in real time from mobile. It combines a complete web admin panel with a daily-use mobile app: parking map, reservations, vehicles and a conversational assistant with voice support.",
+        "**Secure REST API backend** with multi-company support, event-based occupancy control and a parking-intent assistant with optional Gemini integration. The flow validates availability, handles out-of-hours sessions and keeps occupancy history coherent in real time through WebSockets.",
+        "**Complete product architecture**: JWT authentication, differentiated roles (superadmin, admin, employee), origin-based CORS control, configurable endpoint rate limiting and automatically generated Swagger documentation. Three independent clients (API, web, mobile) coordinated over the same PostgreSQL database with versioned Prisma migrations.",
+        "**The edge**: three product surfaces (web admin + employee app + API) sharing business logic without duplicating it. The assistant proposes, occupancy rules validate, and the employee acts from a single app. Next step: persistent assistant history, spatial parking-space ranking and a CI/CD pipeline for continuous deployment."
       ],
-      tags: ["JavaScript", "HTML", "CSS", "Auth", "Forms"]
+      tags: ["React Native", "React", "Node.js", "PostgreSQL", "Prisma", "WebSockets", "JWT", "Gemini"]
     },
     edu: [
       { title: "Higher VET — DAM", where: "Multiplatform Application Development", tag: "2024 - 2026 · Completed" },

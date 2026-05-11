@@ -411,6 +411,201 @@ img { display: block; max-width: 100%; }
   position: absolute; bottom: 16px; right: 16px; z-index: 2;
   font: 500 11px var(--mono); color: var(--ink-3);
 }
+.nutria-gallery {
+  min-height: 560px;
+  padding: 58px 18px 48px;
+}
+.aparcaya-gallery {
+  min-height: 640px;
+}
+.nutria-shots {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  height: 100%;
+}
+.aparcaya-gallery .nutria-shots {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.nutria-shot {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 9 / 16;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(255,255,255,0.08), transparent 48%),
+    rgba(255,255,255,0.035);
+  overflow: hidden;
+  cursor: zoom-in;
+  transition: transform 0.28s var(--ease-out), border-color 0.28s, background 0.28s;
+}
+.nutria-shot.compact {
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(124,92,255,0.15), transparent 52%),
+    rgba(255,255,255,0.035);
+}
+.nutria-shot:hover,
+.nutria-shot:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--line-strong);
+  outline: none;
+  background: rgba(255,255,255,0.06);
+}
+.nutria-shot img,
+.nutria-shot image-slot {
+  width: 100%;
+  height: 100%;
+}
+.nutria-shot img {
+  object-fit: contain;
+  padding: 4px;
+}
+.nutria-shot image-slot::part(frame) {
+  background: transparent;
+}
+.nutria-shot image-slot::part(empty) {
+  color: var(--ink-2);
+  font: 500 11px/1.35 var(--body);
+}
+.nutria-shot image-slot::part(ring) {
+  border-color: var(--line);
+}
+.nutria-shot-label {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 6px 7px;
+  border-radius: 999px;
+  background: rgba(7,7,10,0.72);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font: 600 10px/1 var(--body);
+  backdrop-filter: blur(10px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nutria-shot-label span {
+  flex: 0 0 auto;
+  color: var(--accent);
+  font-family: var(--mono);
+}
+.nutria-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding: clamp(14px, 3vw, 34px);
+}
+.nutria-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(3,3,6,0.86);
+  backdrop-filter: blur(18px) saturate(125%);
+  cursor: zoom-out;
+}
+.nutria-lightbox-shell {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 1100px);
+  min-height: min(86vh, 820px);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+}
+.nutria-lightbox-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  color: var(--ink);
+}
+.nutria-lightbox-top div {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+.nutria-lightbox-top span {
+  font: 500 11px var(--mono);
+  color: var(--accent);
+  letter-spacing: 0.12em;
+}
+.nutria-lightbox-top strong {
+  font: 700 clamp(22px, 3vw, 36px)/1 var(--display);
+  letter-spacing: -0.025em;
+}
+.nutria-lightbox-close,
+.nutria-lightbox-nav {
+  appearance: none;
+  border: 1px solid var(--line-strong);
+  background: rgba(255,255,255,0.07);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s var(--ease-out), border-color 0.2s;
+  backdrop-filter: blur(12px);
+}
+.nutria-lightbox-close:hover,
+.nutria-lightbox-nav:hover {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+.nutria-lightbox-close {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  font: 400 30px/1 var(--body);
+}
+.nutria-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 48px;
+  height: 64px;
+  border-radius: 999px;
+  font: 400 42px/1 var(--body);
+}
+.nutria-lightbox-nav.prev { left: 0; transform: translate(-50%, -50%); }
+.nutria-lightbox-nav.next { right: 0; transform: translate(50%, -50%); }
+.nutria-lightbox-nav.prev:hover { transform: translate(-50%, -50%) scale(1.04); }
+.nutria-lightbox-nav.next:hover { transform: translate(50%, -50%) scale(1.04); }
+.nutria-lightbox-media {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+.nutria-lightbox-media img {
+  max-width: 100%;
+  max-height: calc(100vh - 132px);
+  object-fit: contain;
+  border-radius: 24px;
+  background: #050509;
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+}
+.nutria-lightbox-empty {
+  display: grid;
+  place-items: center;
+  width: min(100%, 520px);
+  min-height: 260px;
+  padding: 24px;
+  border-radius: 22px;
+  border: 1px dashed var(--line-strong);
+  color: var(--ink-2);
+  text-align: center;
+  background: rgba(255,255,255,0.04);
+}
 .project-info { display: flex; flex-direction: column; gap: 18px; }
 .project-eyebrow {
   font: 500 11px var(--mono); letter-spacing: 0.16em;
@@ -679,6 +874,93 @@ image-slot {
   .project-media {
     order: 2;
     min-height: 280px;
+    border-radius: 18px;
+  }
+
+  .nutria-gallery {
+    min-height: 0;
+    padding: 54px 12px 44px;
+  }
+
+  .aparcaya-gallery {
+    min-height: 0;
+  }
+
+  .nutria-shots {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .nutria-shot {
+    border-radius: 15px;
+  }
+
+  .nutria-shot img {
+    padding: 3px;
+  }
+
+  .nutria-shot-label {
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+    padding: 6px;
+    font-size: 9px;
+  }
+
+  .nutria-lightbox {
+    padding: 12px;
+  }
+
+  .nutria-lightbox-shell {
+    min-height: calc(100vh - 24px);
+    gap: 10px;
+  }
+
+  .nutria-lightbox-top {
+    align-items: flex-start;
+  }
+
+  .nutria-lightbox-top div {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .nutria-lightbox-top strong {
+    font-size: 24px;
+  }
+
+  .nutria-lightbox-close {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 auto;
+  }
+
+  .nutria-lightbox-nav {
+    top: auto;
+    bottom: 4px;
+    width: 46px;
+    height: 46px;
+    font-size: 34px;
+  }
+
+  .nutria-lightbox-nav.prev,
+  .nutria-lightbox-nav.prev:hover {
+    left: calc(50% - 34px);
+    transform: translate(-100%, 0);
+  }
+
+  .nutria-lightbox-nav.next,
+  .nutria-lightbox-nav.next:hover {
+    right: calc(50% - 34px);
+    transform: translate(100%, 0);
+  }
+
+  .nutria-lightbox-media {
+    padding-bottom: 62px;
+  }
+
+  .nutria-lightbox-media img {
+    max-height: calc(100vh - 150px);
     border-radius: 18px;
   }
 
