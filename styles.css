@@ -302,7 +302,7 @@ img { display: block; max-width: 100%; }
 .marquee-track {
   display: flex; gap: 56px; align-items: center;
   width: max-content;
-  animation: marquee 38s linear infinite;
+  animation: marquee 76s linear infinite;
 }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 .marquee-item {
@@ -385,6 +385,20 @@ img { display: block; max-width: 100%; }
 @media (max-width: 880px) {
   .project, .project.flip { grid-template-columns: 1fr; direction: ltr; }
 }
+.projects-text {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+}
+.project.text-only {
+  grid-template-columns: 1fr;
+  border-top: 1px solid var(--line);
+  padding-top: 28px;
+}
+@media (max-width: 880px) {
+  .projects-text { grid-template-columns: 1fr; gap: clamp(32px, 4vw, 56px); }
+}
 .project-media {
   position: relative;
   border-radius: 22px;
@@ -431,6 +445,20 @@ img { display: block; max-width: 100%; }
 }
 .aparcaya-gallery .nutria-shots {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.case-gallery {
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.case-gallery .nutria-shots {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  height: auto;
+}
+.nutria-shot.wide {
+  grid-column: 1 / -1;
+  aspect-ratio: 16 / 9;
 }
 .nutria-shot {
   position: relative;

@@ -97,7 +97,7 @@ function App() {
       <Hero dict={dict} lang={lang} />
       {t.showMarquee && <Marquee />}
       <About dict={dict} />
-      <Skills dict={dict} />
+      <Skills dict={dict} lang={lang} />
       <Projects dict={dict} lang={lang} />
       <Education dict={dict} />
       <Footer dict={dict} />

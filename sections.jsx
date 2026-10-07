@@ -83,7 +83,7 @@ function Hero({ dict, lang }) {
 }
 
 function Marquee() {
-  const items = ["React", "React-Native", "Angular", "Astro", "TypeScript", "JavaScript", "Java", "Python", "Tailwind", "Base de datos"];
+  const items = ["n8n", "Claude", "Llama", "Whisper", "MCP", "WhatsApp API", "PostgreSQL", "NocoDB", "Docker", "Cloudflare", "React", "React-Native", "Angular", "Astro", "TypeScript", "JavaScript", "Java", "Python", "Tailwind", "Base de datos"];
   const dup = [...items, ...items, ...items];
   return (
     <div className="marquee" aria-hidden="true">
@@ -124,7 +124,10 @@ function About({ dict }) {
   );
 }
 
-function SkillCard({ skill, idx }) {
+// Labels are plain strings or { es, en } objects
+const pickLang = (value, lang) => (typeof value === "string" ? value : value[lang] || value.es);
+
+function SkillCard({ skill, idx, lang }) {
   const ref = useRef(null);
   useGlow(ref);
   return (
@@ -133,13 +136,13 @@ function SkillCard({ skill, idx }) {
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-start" }}>
         <span className="icon">{skill.icon}</span>
       </div>
-      <div className="name">{skill.name}</div>
-      <div className="kind">{skill.kind}</div>
+      <div className="name">{pickLang(skill.name, lang)}</div>
+      <div className="kind">{pickLang(skill.kind, lang)}</div>
     </div>
   );
 }
 
-function Skills({ dict }) {
+function Skills({ dict, lang }) {
   const ref = useReveal();
   return (
     <section className="section container" id="skills" ref={ref} data-screen-label="Stack">
@@ -153,7 +156,7 @@ function Skills({ dict }) {
         <div className="section-meta reveal">{dict.skills.meta}</div>
       </header>
       <div className="skills-grid">
-        {window.SKILLS.map((s, i) => <SkillCard key={s.name} skill={s} idx={i} />)}
+        {window.SKILLS.map((s, i) => <SkillCard key={pickLang(s.name, "es")} skill={s} idx={i} lang={lang} />)}
       </div>
     </section>
   );
@@ -286,7 +289,7 @@ function NutriaGallery({ dict, lang }) {
             );
           })}
         </div>
-        <span className="corner-mark">01 / NUTRIA</span>
+        <span className="corner-mark">02 / NUTRIA</span>
       </div>
 
       {activeShot && ReactDOM.createPortal(
@@ -323,7 +326,7 @@ function NutriaGallery({ dict, lang }) {
 
 function NutriaProject({ dict, lang }) {
   return (
-    <article className="project" data-screen-label="NutrIA">
+    <article className="project flip" data-screen-label="NutrIA">
       <NutriaGallery dict={dict} lang={lang} />
       <div className="project-info">
         <div className="project-eyebrow reveal">{dict.nutria.tag}</div>
@@ -451,7 +454,7 @@ function AparcayaGallery({ dict, lang }) {
             );
           })}
         </div>
-        <span className="corner-mark">02 / APARCAYA</span>
+        <span className="corner-mark">03 / APARCAYA</span>
       </div>
 
       {activeShot && ReactDOM.createPortal(
@@ -488,7 +491,7 @@ function AparcayaGallery({ dict, lang }) {
 
 function AparcayaProject({ dict, lang }) {
   return (
-    <article className="project flip" data-screen-label="AparcaYa">
+    <article className="project" data-screen-label="AparcaYa">
       <AparcayaGallery dict={dict} lang={lang} />
       <div className="project-info">
         <div className="project-eyebrow reveal">{dict.aparcaya.tag}</div>
@@ -509,6 +512,166 @@ function AparcayaProject({ dict, lang }) {
   );
 }
 
+// `wide` tiles span the full row with a 16:9 ratio, for desktop screenshots.
+const ASISTENTE_SCREENSHOTS = [
+  { src: "assets/asistente-citas-01.webp", label: { es: "Conversaciones", en: "Conversations" }, wide: true },
+  { src: "assets/asistente-citas-02.webp", label: { es: "Agenda", en: "Schedule" }, wide: true }
+];
+
+function ProjectGallery({ shots, badge, mark, lang }) {
+  const [active, setActive] = useState(null);
+  const [sources, setSources] = useState({});
+
+  useEffect(() => {
+    let alive = true;
+    shots.forEach((shot) => {
+      const candidates = getNutriaCandidates(shot.src);
+      const tryCandidate = (candidateIndex) => {
+        if (!alive) return;
+        const candidate = candidates[candidateIndex];
+        if (!candidate) {
+          if (alive) setSources((prev) => ({ ...prev, [shot.src]: "" }));
+          return;
+        }
+        const img = new Image();
+        img.onload = () => alive && setSources((prev) => ({ ...prev, [shot.src]: candidate }));
+        img.onerror = () => alive && tryCandidate(candidateIndex + 1);
+        img.src = candidate;
+      };
+      tryCandidate(0);
+    });
+    return () => { alive = false; };
+  }, [shots]);
+
+  const getShotSrc = (index) => sources[shots[index].src] || "";
+
+  const closeLightbox = () => setActive(null);
+  const openShot = (index) => {
+    if (!getShotSrc(index)) return;
+    setActive(index);
+  };
+  // Only cycles through screenshots that exist
+  const goTo = (delta) => {
+    setActive((current) => {
+      let next = current;
+      for (let step = 0; step < shots.length; step++) {
+        next = (next + delta + shots.length) % shots.length;
+        if (getShotSrc(next)) return next;
+      }
+      return current;
+    });
+  };
+
+  useEffect(() => {
+    if (active === null) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") goTo(-1);
+      if (e.key === "ArrowRight") goTo(1);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [active, sources]);
+
+  const activeShot = active === null ? null : shots[active];
+  const activeSrc = active === null ? "" : getShotSrc(active);
+  const hasMany = shots.filter((shot) => sources[shot.src]).length > 1;
+
+  return (
+    <>
+      <div className="project-media nutria-gallery case-gallery reveal">
+        <span className="badge">{badge}</span>
+        <div className="nutria-shots">
+          {shots.map((shot, index) => {
+            const label = shot.label[lang] || shot.label.es;
+            const resolvedSrc = sources[shot.src];
+            const hasImage = Boolean(resolvedSrc);
+            return (
+              <div
+                key={shot.src}
+                className={`nutria-shot ${shot.wide ? "wide" : ""} ${hasImage ? "" : "is-empty"}`}
+                role={hasImage ? "button" : "img"}
+                tabIndex={hasImage ? "0" : undefined}
+                aria-label={hasImage ? `${lang === "es" ? "Ver captura grande" : "View screenshot"}: ${label}` : label}
+                onClick={hasImage ? () => openShot(index) : undefined}
+                onKeyDown={(e) => {
+                  if (hasImage && (e.key === "Enter" || e.key === " ")) {
+                    e.preventDefault();
+                    openShot(index);
+                  }
+                }}
+              >
+                {resolvedSrc ? (
+                  <img src={resolvedSrc} alt={label} />
+                ) : (
+                  <div className="nutria-shot-empty">
+                    {lang === "es" ? "Imagen no publicada" : "Image not published"}
+                  </div>
+                )}
+                <span className="nutria-shot-label">
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  {label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        <span className="corner-mark">{mark}</span>
+      </div>
+
+      {activeShot && ReactDOM.createPortal(
+        <div className="nutria-lightbox" role="dialog" aria-modal="true" aria-label={activeShot.label[lang] || activeShot.label.es}>
+          <button className="nutria-lightbox-backdrop" type="button" aria-label={lang === "es" ? "Cerrar visor" : "Close viewer"} onClick={closeLightbox}></button>
+          <div className="nutria-lightbox-shell">
+            <div className="nutria-lightbox-top">
+              <div>
+                <span>{String(active + 1).padStart(2, "0")} / {String(shots.length).padStart(2, "0")}</span>
+                <strong>{activeShot.label[lang] || activeShot.label.es}</strong>
+              </div>
+              <button className="nutria-lightbox-close" type="button" onClick={closeLightbox} aria-label={lang === "es" ? "Cerrar" : "Close"}>&times;</button>
+            </div>
+            {hasMany && <button className="nutria-lightbox-nav prev" type="button" onClick={() => goTo(-1)} aria-label={lang === "es" ? "Captura anterior" : "Previous screenshot"}>&lsaquo;</button>}
+            <div className="nutria-lightbox-media">
+              <img src={activeSrc} alt={activeShot.label[lang] || activeShot.label.es} />
+            </div>
+            {hasMany && <button className="nutria-lightbox-nav next" type="button" onClick={() => goTo(1)} aria-label={lang === "es" ? "Captura siguiente" : "Next screenshot"}>&rsaquo;</button>}
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
+  );
+}
+
+// Without `shots` the project renders as text only
+function CaseProject({ data, shots, mark, flip, lang }) {
+  return (
+    <article className={`project ${flip ? "flip" : ""} ${shots ? "" : "text-only"}`} data-screen-label={data.title}>
+      {shots && <ProjectGallery shots={shots} badge={data.tag} mark={mark} lang={lang} />}
+      <div className="project-info">
+        <div className="project-eyebrow reveal">{data.tag}</div>
+        <h3 className="project-title">
+          <WordReveal text={data.title} delayStep={50} />
+        </h3>
+        <p className="project-tagline reveal" style={{ "--delay": "100ms" }}>{data.tagline}</p>
+        <div className="project-body">
+          {data.body.map((p, i) => (
+            <p key={i} className="reveal" style={{ "--delay": `${150 + i * 80}ms` }}>{richText(p)}</p>
+          ))}
+        </div>
+        <div className="project-tags reveal" style={{ "--delay": `${150 + data.body.length * 80}ms` }}>
+          {data.tags.map((tg) => <span key={tg} className="project-tag">{tg}</span>)}
+        </div>
+      </div>
+    </article>
+  );
+}
+
 function Projects({ dict, lang }) {
   const ref = useReveal();
   return (
@@ -523,8 +686,13 @@ function Projects({ dict, lang }) {
         <div className="section-meta reveal">{dict.projects.meta}</div>
       </header>
       <div className="projects">
+        <CaseProject data={dict.asistente} shots={ASISTENTE_SCREENSHOTS} mark="01 / WHATSAPP" lang={lang} />
         <NutriaProject dict={dict} lang={lang} />
         <AparcayaProject dict={dict} lang={lang} />
+        <div className="projects-text">
+          <CaseProject data={dict.integracion} lang={lang} />
+          <CaseProject data={dict.captacion} lang={lang} />
+        </div>
       </div>
     </section>
   );
